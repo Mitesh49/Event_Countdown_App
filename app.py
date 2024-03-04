@@ -3,8 +3,15 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 def signup(username, password):
-    df = pd.DataFrame({"Username": [username], "Password": [password], "Signup Date": [datetime.now()]})
-    df.to_excel("login.xlsx", index=False)
+    try:
+        existing_df = pd.read_excel("login.xlsx")
+        new_df = pd.DataFrame({"Username": [username], "Password": [password], "Signup Date": [datetime.now()]})
+        updated_df = pd.concat([existing_df, new_df], ignore_index=True)
+        updated_df.to_excel("login.xlsx", index=False)
+    except FileNotFoundError:
+        df = pd.DataFrame({"Username": [username], "Password": [password], "Signup Date": [datetime.now()]})
+        df.to_excel("login.xlsx", index=False)
+
 
 def login(username, password):
     df = pd.read_excel("login.xlsx")
